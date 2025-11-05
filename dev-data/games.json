@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Elden Ring",
+    "price": 59.99,
+    "author": "FromSoftware",
+    "category": "Action RPG",
+    "photo": "https://example.com/elden-ring.jpg",
+    "description": "An epic action RPG set in a vast fantasy world created by Hidetaka Miyazaki and George R.R. Martin.",
+    "releaseDate": "2022-02-25",
+    "language": "English",
+    "slug": "elden-ring"
+  },
+  {
+    "name": "Hollow Knight",
+    "price": 14.99,
+    "author": "Team Cherry",
+    "category": "Metroidvania",
+    "photo": "https://example.com/hollow-knight.jpg",
+    "description": "A challenging 2D action-adventure through a vast interconnected world.",
+    "releaseDate": "2017-02-24",
+    "language": "English",
+    "slug": "hollow-knight"
+  },
+  {
+    "name": "Stardew Valley",
+    "price": 14.99,
+    "author": "ConcernedApe",
+    "category": "Simulation",
+    "photo": "https://example.com/stardew-valley.jpg",
+    "description": "Build the farm of your dreams in this charming countryside RPG.",
+    "releaseDate": "2016-02-26",
+    "language": "English",
+    "slug": "stardew-valley"
+  },
+  {
+    "name": "The Witcher 3: Wild Hunt",
+    "price": 39.99,
+    "author": "CD Projekt Red",
+    "category": "Action RPG",
+    "photo": "https://example.com/witcher3.jpg",
+    "description": "An open-world RPG masterpiece following Geralt of Rivia on his quest.",
+    "releaseDate": "2015-05-19",
+    "language": "English",
+    "slug": "witcher-3-wild-hunt"
+  },
+  {
+    "name": "Celeste",
+    "price": 19.99,
+    "author": "Maddy Makes Games",
+    "category": "Platformer",
+    "photo": "https://example.com/celeste.jpg",
+    "description": "Help Madeline survive her inner demons on her journey to the top of Celeste Mountain.",
+    "releaseDate": "2018-01-25",
+    "language": "English",
+    "slug": "celeste"
+  },
+  {
+    "name": "Hades",
+    "price": 24.99,
+    "author": "Supergiant Games",
+    "category": "Roguelike",
+    "photo": "https://example.com/hades.jpg",
+    "description": "Defy the god of the dead as you hack and slash out of the Underworld.",
+    "releaseDate": "2020-09-17",
+    "language": "English",
+    "slug": "hades"
+  },
+  {
+    "name": "Minecraft",
+    "price": 26.95,
+    "author": "Mojang Studios",
+    "category": "Sandbox",
+    "photo": "https://example.com/minecraft.jpg",
+    "description": "A sandbox game where you can build, explore, and survive in blocky worlds.",
+    "releaseDate": "2011-11-18",
+    "language": "English",
+    "slug": "minecraft"
+  },
+  {
+    "name": "Red Dead Redemption 2",
+    "price": 59.99,
+    "author": "Rockstar Games",
+    "category": "Action Adventure",
+    "photo": "https://example.com/rdr2.jpg",
+    "description": "An epic tale of life in America's unforgiving heartland at the dawn of the modern age.",
+    "releaseDate": "2018-10-26",
+    "language": "English",
+    "slug": "red-dead-redemption-2"
+  },
+  {
+    "name": "Terraria",
+    "price": 9.99,
+    "author": "Re-Logic",
+    "category": "Sandbox",
+    "photo": "https://example.com/terraria.jpg",
+    "description": "Dig, fight, explore, build! The classic 2D sandbox adventure.",
+    "releaseDate": "2011-05-16",
+    "language": "English",
+    "slug": "terraria"
+  },
+  {
+    "name": "Dark Souls III",
+    "price": 59.99,
+    "author": "FromSoftware",
+    "category": "Action RPG",
+    "photo": "https://example.com/dark-souls-3.jpg",
+    "description": "The critically acclaimed action RPG that defined a generation of challenging gameplay.",
+    "releaseDate": "2016-04-12",
+    "language": "English",
+    "slug": "dark-souls-3"
+  },
+  {
+    "name": "Portal 2",
+    "price": 9.99,
+    "author": "Valve",
+    "category": "Puzzle",
+    "photo": "https://example.com/portal2.jpg",
+    "description": "The sequel to the innovative first-person puzzle platformer.",
+    "releaseDate": "2011-04-19",
+    "language": "English",
+    "slug": "portal-2"
+  },
+  {
+    "name": "Undertale",
+    "price": 9.99,
+    "author": "Toby Fox",
+    "category": "RPG",
+    "photo": "https://example.com/undertale.jpg",
+    "description": "A quirky RPG where nobody has to die and your choices really matter.",
+    "releaseDate": "2015-09-15",
+    "language": "English",
+    "slug": "undertale"
+  },
+  {
+    "name": "Sekiro: Shadows Die Twice",
+    "price": 59.99,
+    "author": "FromSoftware",
+    "category": "Action Adventure",
+    "photo": "https://example.com/sekiro.jpg",
+    "description": "Carve your own path to vengeance in this challenging shinobi action game.",
+    "releaseDate": "2019-03-22",
+    "language": "English",
+    "slug": "sekiro-shadows-die-twice"
+  },
+  {
+    "name": "God of War",
+    "price": 49.99,
+    "author": "Santa Monica Studio",
+    "category": "Action Adventure",
+    "photo": "https://example.com/god-of-war.jpg",
+    "description": "Kratos and his son embark on a journey through Norse mythology.",
+    "releaseDate": "2018-04-20",
+    "language": "English",
+    "slug": "god-of-war"
+  },
+  {
+    "name": "Cuphead",
+    "price": 19.99,
+    "author": "Studio MDHR",
+    "category": "Platformer",
+    "photo": "https://example.com/cuphead.jpg",
+    "description": "A classic run and gun action game heavily focused on boss battles.",
+    "releaseDate": "2017-09-29",
+    "language": "English",
+    "slug": "cuphead"
+  }
+]

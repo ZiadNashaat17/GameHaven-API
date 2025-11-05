@@ -16,8 +16,7 @@ export const getAllGames = catchAsync(async (req, res, next) => {
 });
 
 export const getGame = catchAsync(async (req, res, next) => {
-  const gameId = req.params.id;
-  const game = Game.findById(gameId);
+  const game = await Game.findById(req.params.id);
 
   if (!game) {
     return next(new AppError('No game found with this ID!!', 404));
@@ -39,8 +38,7 @@ export const createGame = catchAsync(async (req, res, next) => {
 });
 
 export const updateGame = catchAsync(async (req, res, next) => {
-  const gameId = req.params.id;
-  const game = Game.findByIdAndUpdate(gameId, req.body, {
+  const game = await Game.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
   });
@@ -52,5 +50,30 @@ export const updateGame = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: game,
+  });
+});
+
+export const deleteGame = catchAsync(async (req, res, next) => {
+  const game = Game.findById(req.params.id);
+  if (!game) {
+    return next(new AppError('No game found with this ID!! Please Enter a valid ID', 404));
+  }
+
+  await Game.findByIdAndDelete(req.params.id);
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
+
+export const getGameCategories = catchAsync(async (req, res, next) => {
+  // return unique categories
+  const categories = Game.schema.path('category').enumValues;
+
+  res.status(200).json({
+    status: 'success',
+    results: categories.length,
+    data: { categories },
   });
 });

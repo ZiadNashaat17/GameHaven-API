@@ -1,42 +1,107 @@
+import { compare, hash } from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    validate: validator.isEmail,
-  },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 8,
-  },
-  passwordConfirm: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 8,
-    validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: 'Passwords are not the same!!',
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      validate: validator.isEmail,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 8,
+      select: false,
+    },
+    // passwordConfirm: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    //   validate: {
+    //     validator: function (el) {
+    //       return el === this.password;
+    //     },
+    //     message: 'Passwords are not the same!!',
+    //   },
+    // },
+    passwordChangedAt: {
+      type: Date,
+      select: false,
     },
   },
+  {
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+userSchema
+  .virtual('passwordConfirm')
+  .set(function (value) {
+    this._passwordConfirm = value;
+  })
+  .get(function () {
+    return this._passwordConfirm;
+  });
+
+userSchema.path('password').validate(function () {
+  if (this.isModified('password')) {
+    return this._passwordConfirm === this.password;
+  }
+  return true;
+}, 'Passwords are not the same!!');
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await hash(this.password, 12);
+  this._passwordConfirm = undefined;
+  this.passwordChangedAt = Date.now();
+
+  next();
 });
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  return await compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedAtTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+
+    return JWTTimestamp < changedAtTimestamp;
+  }
+
+  return false;
+};
 
 const User = model('User', userSchema);
 
