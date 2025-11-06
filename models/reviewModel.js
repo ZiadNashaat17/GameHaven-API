@@ -32,7 +32,7 @@ const reviewSchema = new Schema(
   }
 );
 
-reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+reviewSchema.index({ game: 1, user: 1 }, { unique: true });
 
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
@@ -45,7 +45,7 @@ reviewSchema.pre(/^find/, function (next) {
 
 reviewSchema.statics.calcAverageRatings = async function (gameId) {
   const stats = await this.aggregate([
-    { $match: { tour: gameId } },
+    { $match: { game: gameId } },
     {
       $group: {
         _id: '$game',
