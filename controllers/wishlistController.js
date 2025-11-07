@@ -8,37 +8,43 @@ export const getAllFromWishlist = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    results: wishlist.items.length,
     data: { wishlist },
   });
 });
 
 // api/v1/game/:gameId/addToWishlist
 export const addToWishlist = catchAsync(async (req, res, next) => {
-  req.body.user = req.user.id;
-  const userId = req.body.user;
-  const { game, priceWhenAdded } = req.body;
+  const userId = req.user._id.toString();
+  req.body.user = userId;
+  const { items } = req.body;
 
   let wishlist = await Wishlist.findOne({ user: userId });
+  // console.log('req.body log:', req.body);
+  // console.log('items log:', items);
+  // console.log('wishlist log: ', wishlist);
 
   if (!wishlist) {
-    wishlist = await Wishlist.create(req.body);
-  } else {
-    // check duplicate
-    const gameExists = wishlist.items.find(item => item.game.toString() === game);
+    wishlist = await Wishlist.create({ user: userId, items });
 
-    if (gameExists) {
-      return res.status(409).json({
-        status: 'fail',
-        message: 'Game already in wishlist',
-      });
-    }
-
-    wishlist.items.push({
-      game,
-      priceWhenAdded,
+    return res.status(201).json({
+      status: 'success',
+      message: 'Game added to wishlist',
+      results: wishlist.items.length,
+      data: { wishlist },
     });
   }
+
+  // check duplicate
+  const gameExists = wishlist.items.find(item => item._id.toString() === items[0].toString());
+
+  if (gameExists) {
+    return res.status(409).json({
+      status: 'fail',
+      message: 'Game already in wishlist',
+    });
+  }
+
+  wishlist.items.push(items);
 
   await wishlist.save();
 
@@ -77,7 +83,7 @@ export const removeItemFromWishList = catchAsync(async (req, res, next) => {
   }
 
   const initialLength = wishlist.items.length;
-  wishlist.items = wishlist.items.filter(item => item.game.id.toString() !== gameId);
+  wishlist.items = wishlist.items.filter(item => item._id.toString() !== gameId);
 
   if (wishlist.items.length === initialLength) {
     return next(new AppError('Item not found in cart', 404));

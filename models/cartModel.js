@@ -21,14 +21,6 @@ const cartSchema = new Schema(
           min: 1,
           default: 1,
         },
-        price: {
-          type: Number,
-          required: true,
-        },
-        totalPrice: {
-          type: Number,
-          required: true,
-        },
       },
     ],
     totalPrice: {
@@ -39,30 +31,25 @@ const cartSchema = new Schema(
   { timestamps: true }
 );
 
+cartSchema.pre('save', async function (next) {
+  await this.populate('items.game');
+
+  next();
+});
+
 cartSchema.pre('save', function (next) {
+  console.log('this is the pre save hook');
+
   this.totalPrice = 0;
   if (Array.isArray(this.items) && this.items.length) {
     this.items.forEach(item => {
-      this.totalPrice += Number(item.totalPrice) || 0;
+      console.log(item.game, item.quantity);
+      let itemTotalPrice = Number(item.game.price) * Number(item.quantity);
+      this.totalPrice += itemTotalPrice;
     });
   }
   next();
 });
-
-// cartSchema.post(/^findOneAnd/, function () {
-//   if (Array.isArray(this.items) && this.items.length) {
-//     this.items.forEach(item => {
-//       this.totalPrice = this.totalPrice + item.totalPrice;
-//     });
-//   }
-// });
-
-// cartSchema.post(/^find/, function () {
-//   this.items.forEach(item => {
-//     let itemTotalPrice = item.quantity * item.price;
-//     this.totalPrice = this.totalPrice + itemTotalPrice;
-//   });
-// });
 
 const Cart = model('Cart', cartSchema);
 

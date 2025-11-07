@@ -4,7 +4,6 @@ import {
   getAllCartItems,
   removeItemFromCart,
   removeWholeItemFromCart,
-  updateTotalPrice,
 } from '../controllers/cartController.js';
 import { protect } from '../controllers/authController.js';
 

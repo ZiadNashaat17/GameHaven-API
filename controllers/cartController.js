@@ -2,47 +2,37 @@ import Cart from '../models/cartModel.js';
 import AppError from '../utils/appError.js';
 import catchAsync from '../utils/catchAsync.js';
 
-export const updateTotalPrice = catchAsync(async (req, res, next) => {
-  const cart = await Cart.findOne({ user: req.user.id });
-
-  if (!cart) return next(new AppError('No Cart found!', 404));
-
-  cart.totalPrice = cart.items.reduce((sum, item) => sum + Number(item.totalPrice));
-  await cart.save();
-
-  res.status(200).json({
-    status: 'success',
-    data: { cart },
-  });
-});
-
 export const AddItemToCart = async (req, res, next) => {
-  const userId = req.user.id;
-  const { game, price, quantity } = req.body;
+  const user = req.user._id;
+  const { game, quantity } = req.body;
 
-  const totalPrice = price * quantity;
-  let cart = await Cart.findOne({ user: userId });
+  // console.log(req.body);
+  console.log(typeof game, quantity);
+  // const cartGame = Game.findById(game);
+  // const totalPrice = game.price * quantity;
+  let cart = await Cart.findOne({ user });
 
   if (!cart) {
     cart = await Cart.create({
-      user: userId,
-      items: [{ game, quantity, price, totalPrice }],
+      user,
+      items: [{ game, quantity }],
     });
   } else {
     const existingItemIndex = cart.items.findIndex(item => item.game.toString() === game);
 
     if (existingItemIndex >= 0) {
       cart.items[existingItemIndex].quantity += quantity;
-      cart.items[existingItemIndex].totalPrice =
-        cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
+      // cart.items[existingItemIndex].totalPrice =
+      //   cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
     } else {
-      cart.items.push({ game, quantity, price, totalPrice });
+      cart.items.push({ game, quantity });
     }
 
     await cart.save();
   }
 
   //   await cart.populate('items.game');
+  console.log('this is the addItemToCart handler');
 
   res.status(201).json({
     status: 'success',
@@ -52,12 +42,13 @@ export const AddItemToCart = async (req, res, next) => {
 };
 
 export const getAllCartItems = async (req, res, next) => {
-  const cart = await Cart.findOne({ user: req.user.id }).populate('items.game');
+  const user = req.user._id;
+  const cart = await Cart.findOne({ user }).populate('items.game');
 
   if (!cart) {
     return res.status(200).json({
       status: 'success',
-      data: { cart: { items: [], totalPrice: 0 } },
+      data: { cart },
     });
   }
 
@@ -68,10 +59,10 @@ export const getAllCartItems = async (req, res, next) => {
 };
 
 export const removeItemFromCart = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
+  const user = req.user._id;
   const gameId = req.params.id;
 
-  const cart = await Cart.findOne({ user: userId });
+  const cart = await Cart.findOne({ user });
 
   if (!cart) {
     return next(new AppError('Cart not found', 404));
@@ -91,8 +82,8 @@ export const removeItemFromCart = catchAsync(async (req, res, next) => {
       });
     }
     cart.items[existingItemIndex].quantity--;
-    cart.items[existingItemIndex].totalPrice =
-      cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
+    // cart.items[existingItemIndex].totalPrice =
+    //   cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
   } else {
     return next(new AppError('Item not found in cart', 404));
   }
@@ -107,10 +98,10 @@ export const removeItemFromCart = catchAsync(async (req, res, next) => {
 });
 
 export const removeWholeItemFromCart = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
+  const user = req.user._id;
   const gameId = req.params.id;
 
-  let cart = await Cart.findOne({ user: userId });
+  let cart = await Cart.findOne({ user });
   if (!cart) {
     return next(new AppError('No cart found', 404));
   }

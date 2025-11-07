@@ -10,15 +10,6 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user.id);
-  // const cookieOptions = {
-  //   expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 1),
-  //   httpOnly: true,
-  // };
-  // const env = (process.env.NODE_ENV || '').trim().toLowerCase();
-
-  // if (env === 'production') cookieOptions.secure = true;
-
-  // res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
   user.passwordChangedAt = undefined;
