@@ -6,10 +6,6 @@ export const AddItemToCart = async (req, res, next) => {
   const user = req.user._id;
   const { game, quantity } = req.body;
 
-  // console.log(req.body);
-  console.log(typeof game, quantity);
-  // const cartGame = Game.findById(game);
-  // const totalPrice = game.price * quantity;
   let cart = await Cart.findOne({ user });
 
   if (!cart) {
@@ -22,17 +18,12 @@ export const AddItemToCart = async (req, res, next) => {
 
     if (existingItemIndex >= 0) {
       cart.items[existingItemIndex].quantity += quantity;
-      // cart.items[existingItemIndex].totalPrice =
-      //   cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
     } else {
       cart.items.push({ game, quantity });
     }
 
     await cart.save();
   }
-
-  //   await cart.populate('items.game');
-  console.log('this is the addItemToCart handler');
 
   res.status(201).json({
     status: 'success',
@@ -82,8 +73,6 @@ export const removeItemFromCart = catchAsync(async (req, res, next) => {
       });
     }
     cart.items[existingItemIndex].quantity--;
-    // cart.items[existingItemIndex].totalPrice =
-    //   cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
   } else {
     return next(new AppError('Item not found in cart', 404));
   }

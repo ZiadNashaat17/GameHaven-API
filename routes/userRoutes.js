@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import { deleteUser, getAllUsers, getUser, updateUser } from '../controllers/userController.js';
+import {
+  deleteMe,
+  deleteUser,
+  getAllUsers,
+  getUser,
+  recoverMe,
+  updateMe,
+  updateUser,
+} from '../controllers/userController.js';
 import { login, protect, register, restrictTo } from '../controllers/authController.js';
 
 const router = Router();
@@ -9,7 +17,10 @@ router.post('/auth/login', login);
 
 router.use(protect);
 
-router.get('/:id', getUser);
+router.get('/get-me', getUser);
+router.patch('/update-me', updateMe);
+router.patch('/delete-me', deleteMe);
+router.patch('/recover-me', recoverMe);
 
 router.use(restrictTo('admin'));
 router.get('/', getAllUsers);

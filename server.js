@@ -8,7 +8,7 @@ process.on('uncaughtException', err => {
   process.exit(1);
 });
 
-config({ path: './.docker.env' });
+config({ path: './config.env' });
 import app from './app.js';
 
 const DB = process.env.DATABASE;
