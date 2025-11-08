@@ -43,7 +43,6 @@ cartSchema.pre('save', function (next) {
   this.totalPrice = 0;
   if (Array.isArray(this.items) && this.items.length) {
     this.items.forEach(item => {
-      console.log(item.game, item.quantity);
       let itemTotalPrice = Number(item.game.price) * Number(item.quantity);
       this.totalPrice += itemTotalPrice;
     });

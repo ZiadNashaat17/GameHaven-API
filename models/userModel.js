@@ -33,19 +33,13 @@ const userSchema = new Schema(
       minlength: 8,
       select: false,
     },
-    // passwordConfirm: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    //   validate: {
-    //     validator: function (el) {
-    //       return el === this.password;
-    //     },
-    //     message: 'Passwords are not the same!!',
-    //   },
-    // },
     passwordChangedAt: {
       type: Date,
+      select: false,
+    },
+    active: {
+      type: Boolean,
+      default: true,
       select: false,
     },
   },
@@ -71,6 +65,12 @@ userSchema.path('password').validate(function () {
   }
   return true;
 }, 'Passwords are not the same!!');
+
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+
+  next();
+});
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
