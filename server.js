@@ -16,7 +16,7 @@ connect(DB).then(con => {
   console.log('DB connection successful!');
 });
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 
 const server = app.listen(port, err => {
   console.log(`App listening on port: ${port}`);

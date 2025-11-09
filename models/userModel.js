@@ -1,4 +1,5 @@
 import { compare, hash } from 'bcrypt';
+import crypto from 'crypto';
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 
@@ -42,6 +43,8 @@ const userSchema = new Schema(
       default: true,
       select: false,
     },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   {
     versionKey: false,
@@ -101,6 +104,17 @@ userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
   }
 
   return false;
+};
+
+userSchema.methods.generateResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  console.log({ resetToken }, this.passwordResetToken);
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 const User = model('User', userSchema);

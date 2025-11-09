@@ -10,6 +10,7 @@
   "author": "Ziad Nashaat",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
     "bcrypt": "^6.0.0",
     "dotenv": "^16.4.5",
     "express": "^5.1.0",
