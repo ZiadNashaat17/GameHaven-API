@@ -1,5 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
+import hpp from 'hpp';
+import rateLimit from 'express-rate-limit';
+import mongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
 
 import gameRoutes from './routes/gameRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -7,10 +11,7 @@ import reviewRoutes from './routes/reviewRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import globalErrorHandler from './controllers/errorController.js';
-import hpp from 'hpp';
-import rateLimit from 'express-rate-limit';
-import mongoSanitize from 'express-mongo-sanitize';
-import xss from 'xss-clean';
+// import xss from 'xss-clean';
 
 const app = express();
 
@@ -28,8 +29,8 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
-app.use(mongoSanitize());
-app.use(xss());
+// app.use(mongoSanitize());
+// app.use(xss());
 app.use(
   hpp({
     whitelist: ['price', 'author', 'category', 'language'],

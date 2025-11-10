@@ -14,7 +14,7 @@ export const getAllUsers = catchAsync(async (req, res, next) => {
 
 export const getUser = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const user = await User.findById(userId);
+  const user = await User.findOne({ _id: userId, active: { $ne: false } });
 
   if (!user) {
     return next(new AppError('No user found with this ID!!', 404));
@@ -27,7 +27,8 @@ export const getUser = catchAsync(async (req, res, next) => {
 });
 
 export const updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+  const userId = req.params.id;
+  const user = await User.findOneAndUpdate({ _id: userId, active: { $ne: false } }, req.body, {
     new: true,
     runValidators: true,
   });
@@ -43,12 +44,13 @@ export const updateUser = catchAsync(async (req, res, next) => {
 });
 
 export const deleteUser = catchAsync(async (req, res, next) => {
-  const user = User.findById(req.params.id);
+  const userId = req.params.id;
+  const user = User.findOne({ _id: userId, active: { $ne: false } });
   if (!user) {
     return next(new AppError('No user found with this ID!! Please enter a valid ID', 404));
   }
 
-  await User.findByIdAndDelete(req.params.id);
+  await User.findOneAndDelete({ _id: userId, active: { $ne: false } });
 
   res.status(200).json({
     status: 'success',
@@ -74,7 +76,7 @@ export const updateMe = catchAsync(async (req, res, next) => {
 
   const filteredObj = filterObj(req.body, 'name', 'email', 'username');
 
-  const user = await User.findByIdAndUpdate(userId, filteredObj, {
+  const user = await User.findOneAndUpdate({ _id: userId, active: { $ne: false } }, filteredObj, {
     new: true,
     runValidators: true,
   });
@@ -88,7 +90,7 @@ export const updateMe = catchAsync(async (req, res, next) => {
 export const deleteMe = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
 
-  await User.findByIdAndUpdate(userId, { active: false });
+  await User.findOneAndUpdate({ _id: userId, active: { $ne: false } }, { active: false });
 
   res.status(204).json({
     status: 'success',
@@ -114,9 +116,8 @@ export const recoverMe = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect password', 401));
   }
 
-  const userId = user._id;
-
-  await User.findByIdAndUpdate(userId, { active: true }, { new: true });
+  user.active = true;
+  await user.save();
 
   res.status(201).json({
     status: 'success',
