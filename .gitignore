@@ -1,3 +1,2 @@
 /node_modules
-config.env.docker.env
-.docker.env
+config.env
