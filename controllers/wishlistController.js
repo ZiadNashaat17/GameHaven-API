@@ -19,9 +19,6 @@ export const addToWishlist = catchAsync(async (req, res, next) => {
   const { items } = req.body;
 
   let wishlist = await Wishlist.findOne({ user: userId });
-  // console.log('req.body log:', req.body);
-  // console.log('items log:', items);
-  // console.log('wishlist log: ', wishlist);
 
   if (!wishlist) {
     wishlist = await Wishlist.create({ user: userId, items });
