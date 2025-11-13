@@ -69,11 +69,11 @@ userSchema.path('password').validate(function () {
   return true;
 }, 'Passwords are not the same!!');
 
-userSchema.pre(/^find/, function (next) {
-  this.find({ active: { $ne: false } });
+// userSchema.pre(/^find/, function (next) {
+//   this.find({ active: { $ne: false } });
 
-  next();
-});
+//   next();
+// });
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

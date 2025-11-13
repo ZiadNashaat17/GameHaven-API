@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
-      - ./.docker.env
+      - ./config.env
     networks:
       - app-network
     depends_on:
@@ -19,7 +19,7 @@ services:
     image: mongo:latest
     container_name: mongo
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - mongo-data:/data/db
     networks:
