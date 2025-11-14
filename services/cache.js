@@ -7,8 +7,9 @@ const exec = mongoose.Query.prototype.exec;
 
 client.connect();
 
-mongoose.Query.prototype.cache = function () {
+mongoose.Query.prototype.cache = function (options = {}) {
   this.useCache = true;
+  this.hashKey = JSON.stringify(options.key || '');
 
   return this;
 };
@@ -25,31 +26,21 @@ mongoose.Query.prototype.exec = async function () {
   );
 
   // see if we have a value fro 'key' in redis
-  const cacheValue = await client.get(key);
+  const cacheValue = await client.hGet(this.hashKey, key);
   // if we do, return that
   if (cacheValue) {
     const doc = JSON.parse(cacheValue);
 
-    // return Array.isArray(doc) ? doc.map(d => new this.model(d)) : new this.model(doc);
-
-    if (Array.isArray(doc)) {
-      return doc.map(d => {
-        console.log('doc is array log: ', d);
-        console.log('this.model log: ', new this.model(d));
-
-        return new this.model(d);
-      });
-    } else {
-      console.log(doc);
-      // return new this.model(doc);
-    }
+    return Array.isArray(doc) ? doc.map(d => new this.model(d)) : new this.model(doc);
   }
   // otherwise, issue the query and store the results in redis
   const result = await exec.apply(this, arguments);
 
-  client.set(key, JSON.stringify(result));
+  client.hSet(this.hashKey, key, JSON.stringify(result), 'EX', 10);
 
   return result;
 };
 
-// next vid: Hydrating Models
+export const clearHash = function (hashKey) {
+  client.del(JSON.stringify(hashKey));
+};

@@ -3,8 +3,8 @@ import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/appError.js';
 
 export const getAllFromWishlist = catchAsync(async (req, res, next) => {
-  const user = req.user.id || req.body.user;
-  const wishlist = await Wishlist.find({ user }).cache();
+  const user = req.user._id;
+  const wishlist = await Wishlist.find({ user }).cache({ key: user });
 
   res.status(200).json({
     status: 'success',
@@ -14,14 +14,14 @@ export const getAllFromWishlist = catchAsync(async (req, res, next) => {
 
 // api/v1/game/:gameId/addToWishlist
 export const addToWishlist = catchAsync(async (req, res, next) => {
-  const userId = req.user._id.toString();
-  req.body.user = userId;
+  const user = req.user._id;
+  req.body.user = user;
   const { items } = req.body;
 
-  let wishlist = await Wishlist.findOne({ user: userId });
+  let wishlist = await Wishlist.findOne({ user });
 
   if (!wishlist) {
-    wishlist = await Wishlist.create({ user: userId, items });
+    wishlist = await Wishlist.create({ user, items });
 
     return res.status(201).json({
       status: 'success',
