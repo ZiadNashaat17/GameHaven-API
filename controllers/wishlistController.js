@@ -4,7 +4,7 @@ import AppError from '../utils/appError.js';
 
 export const getAllFromWishlist = catchAsync(async (req, res, next) => {
   const user = req.user.id || req.body.user;
-  const wishlist = await Wishlist.find({ user });
+  const wishlist = await Wishlist.find({ user }).cache();
 
   res.status(200).json({
     status: 'success',
