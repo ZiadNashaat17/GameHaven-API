@@ -11,6 +11,7 @@ import reviewRoutes from './routes/reviewRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import globalErrorHandler from './controllers/errorController.js';
+import './services/cache.js';
 // import xss from 'xss-clean';
 
 const app = express();

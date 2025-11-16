@@ -6,11 +6,12 @@ import {
   removeItemFromWishList,
 } from '../controllers/wishlistController.js';
 import { protect } from '../controllers/authController.js';
+import { cleanCache } from '../middlewares/cleanCache.js';
 
 const router = Router();
 
 router.use(protect);
-router.route('/').get(getAllFromWishlist).post(addToWishlist);
+router.route('/').get(getAllFromWishlist).post(cleanCache, addToWishlist);
 router.delete('/remove-all-wishlist', removeAllInWishlist);
 router.delete('/remove-item-from-wishlist/:id', removeItemFromWishList);
 
