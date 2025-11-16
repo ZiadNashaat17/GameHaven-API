@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
 import redis from 'redis';
 
-const redisUrl = 'redis://127.0.0.1:6379';
-const client = redis.createClient({ url: redisUrl });
+// const redisUrl = 'redis://redis:6379';
+const client = redis.createClient({ url: process.env.REDIS_URL });
 const exec = mongoose.Query.prototype.exec;
 
-client.connect();
+await client.connect();
+
+client.on('error', err => console.log('Redis Client Error', err));
+client.on('connect', () => console.log('Redis Client Connected'));
 
 mongoose.Query.prototype.cache = function (options = {}) {
   this.useCache = true;
